@@ -1,3 +1,90 @@
+$size: 100px;
+$gap: 1px;
+
+$cellColor: #eee;
+$cellColorAfter: pink;
+$cellFont: 30px arial;
+$border: 1px solid black;
+
+@mixin cellAlign {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@mixin cellParams {
+  height: $size;
+  width: $size;
+  box-sizing: border-box;
+
+  margin-top: $gap;
+  margin-right: $gap;
+
+  font: $cellFont;
+  border: $border;
+  background-color: $cellColor;
+}
+
 body {
+  height: 100vh;
   margin: 0;
+  @include cellAlign();
+}
+
+.calendar {
+  width: 707px;
+
+  display: flex;
+  flex-wrap: wrap;
+
+}
+
+@for $i from 1 through 31 {
+  .calendar div:nth-child(#{$i})::after {
+    display: none;
+    content: "#{$i}";
+  }
+}
+
+@for $i from 1 through 31 {
+  .calendar-#{$i} div:nth-child(-n+#{$i}) {
+    @include cellParams();
+
+    @include cellAlign();
+
+    &::after {
+      display: inline;
+    }
+
+  }
+
+  .calendar-#{$i} div:hover {
+    margin-top: -20px;
+    margin-bottom: 21px;
+
+    background-color: pink;
+
+    transition-duration: 500ms;
+    cursor: pointer;
+  }
+}
+
+$margin-dif: 101px;
+$margins: 606px;
+
+$order:
+  (
+    "sun": $margins,
+    "sat": $margins - $margin-dif,
+    "fri": $margins - $margin-dif * 2,
+    "thu": $margins - $margin-dif * 3,
+    "wed": $margins - $margin-dif * 4,
+    "tue": $margins - $margin-dif * 5,
+    "mon": $margins - $margin-dif * 6
+  );
+
+@each $name, $margin in $order {
+  .calendar-#{$name} div:first-child {
+    margin-left: $margin;
+  }
 }
